@@ -67,7 +67,7 @@ float operations(int op, float a, float b, float c, int d, char* str) {
             decr(pVal);
             return r * sqrt(2 / a);
         }
-        case INIT_W_GLOROT_V1:
+        case INIT_W_GLOROT:
         {
         return 2 / (a + b);
         }
