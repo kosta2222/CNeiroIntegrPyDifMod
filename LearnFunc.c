@@ -123,7 +123,7 @@ makeHidden(nnLay *curLay, float *inputs, int debug) {
            if (elem == 0) tmpS += curLay->matrix[row][0];
            else tmpS += curLay->matrix[row][elem] * inputs[elem];
         curLay->cost_signals[row] = tmpS;
-        val =operations(RELU,tmpS,0,0,0,"");
+        val =operations(SIGMOID,tmpS,0.42,0,0,"");
         curLay->hidden[row] = val; 
         operations(debug, curLay->cost_signals[row], 0, 0, 0, "cost signals");
         tmpS = 0;
@@ -146,14 +146,14 @@ getHidden(nnLay *curLay) {
 void
 calcOutError(nnLay *curLay, float *targets) {
     for (int row = 0; row < curLay->out; row++)
-        NN->out_errors[row] = (curLay->hidden[row] - targets[row]) * operations(RELU_DERIV,curLay->cost_signals[row],0,0,0,"");
+        NN->out_errors[row] = (curLay->hidden[row] - targets[row]) * operations(SIGMOID_DERIV,curLay->cost_signals[row],0.42,0,0,"");
 }
 
 void
 calcHidError(nnLay *curLay, float *essential_gradients, float *enteredVals) {
     for (int elem = 0; elem < curLay->in; elem++) 
         for (int row = 0; row < curLay->out; row++)
-            curLay->errors[elem] += essential_gradients[row] * curLay->matrix[row][elem] * operations(RELU_DERIV,enteredVals[elem],0,0,0,"");
+            curLay->errors[elem] += essential_gradients[row] * curLay->matrix[row][elem] * operations(SIGMOID_DERIV,enteredVals[elem],0.42,0,0,"");
 }
 
 void

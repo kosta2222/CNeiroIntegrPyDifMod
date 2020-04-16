@@ -46,11 +46,11 @@ float operations(int op, float a, float b, float c, int d, char* str) {
         }
         case SIGMOID:
         {
-            return 1.0 / (1 + exp(b * (-a)));
+            return 2.0 / (1 + exp(b * (-a)));
         }
         case SIGMOID_DERIV:
         {
-            return b * 1.0 / (1 + exp(b * (-a)))*(1 - 1.0 / (1 + exp(b * (-a))));
+            return b * 2.0 / (1 + exp(b * (-a)))*(1 - 2.0 / (1 + exp(b * (-a))));
         }
         case DEBUG:
         {
@@ -66,6 +66,10 @@ float operations(int op, float a, float b, float c, int d, char* str) {
             else PyErr_Print();
             decr(pVal);
             return r * sqrt(2 / a);
+        }
+        case INIT_W_GLOROT_V1:
+        {
+        return 2 / (a + b);
         }
         case DEBUG_STR:
         {
