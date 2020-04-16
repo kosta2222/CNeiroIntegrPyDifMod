@@ -4,7 +4,7 @@ extern whole_NN_params NN[1];
 extern int debug;
 
 int check_2oneHotVecs(float *out_NN, float *vec_y_test, int vec_size);
-float calc_accur( int *scores, int rows);
+int calc_accur( int *scores, int rows);
 
 float cross_validation(float * X_test, float *Y_test, int rows, int cols_X_test, int cols_Y_test) {
     float tmp_vec_x_test[max_in_nn];
@@ -43,11 +43,11 @@ int check_2oneHotVecs(float *out_NN, float *vec_y_test, int vec_size) {
     return 1;
 }
 
-float calc_accur( int *scores, int rows) {
-    float accuracy = 0;
+int calc_accur( int *scores, int rows) {
+    int accuracy = 0;
     int sum = 0;
     // Посчитаем аккуратность
     for (int col = 0; col < rows; col++) sum += scores[col];
-    accuracy =  ((float)sum / rows) * 100; // выразим в процентах
+    accuracy =  (sum / rows) * 100; // выразим в процентах
     return accuracy;
 }

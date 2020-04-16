@@ -1,2 +1,2 @@
-start cmd /K   cneirointegrpydifmod.exe -train 0.7 10 learn_or wei -debug
+   cneirointegrpydifmod.exe -train 0.7 10 learn_or wei -debug
 

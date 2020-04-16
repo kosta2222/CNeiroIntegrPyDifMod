@@ -79,7 +79,7 @@ int main(int argc, char * argv[]) {
 //        fit(X, Y, tmp_rows, cols_train, cols_teach, eps, lr, debug);
 //        //----------------------------------------------------------
         clear_random();
-        printf("Cross validation\n");
+//        printf("Cross validation\n");
         pVal = do_custum_func(pDict, "get_data_x_test", NULL);
         tmp_rows = get_list_size(pVal);
         inner_list = get_list_item(pVal, 0);
@@ -93,7 +93,7 @@ int main(int argc, char * argv[]) {
         cols_teach = tmp_cols;
         make_matrix_from_pyobj(pVal, Y_test, tmp_rows, cols_teach);
 //        cross_validation(X,Y,tmp_rows,cols_train,cols_teach);
-        fit_viaCV(X,Y,X_test,Y_test,80,tmp_rows,cols_train,cols_teach,lr,debug);
+        fit_viaCV(X, Y, X_test, Y_test, 25, tmp_rows, cols_train, cols_teach, lr, debug);
         printf("plot\n");
         if (python_user_scriptDict("plot")) $
             puts("get user module error");
