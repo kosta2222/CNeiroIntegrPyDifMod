@@ -110,7 +110,7 @@ void
 setIO(nnLay *curLay, int inputs, int outputs) {
     /* сенсоры - входа*/curLay->in = inputs + 1;
     /* данный ряд нейронов */curLay->out = outputs;
-    for (int row = 0; row < curLay->out; row++)for (int elem = 0; elem < curLay->in; elem++)printf("operations\n"), curLay->matrix[row][elem] = operations(INIT_W_HE, curLay->in, 0, 0, 0, "");
+    for (int row = 0; row < curLay->out; row++)for (int elem = 0; elem < curLay->in; elem++)printf("operations\n"), curLay->matrix[row][elem] = operations(INIT_W_GLOROT_V1, curLay->in, curLay->out, 0, 0, "");
 
 }
 
