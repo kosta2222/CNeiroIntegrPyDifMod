@@ -55,37 +55,40 @@ fit_viaCV(float *X, float *Y, float *X_test, float * Y_test, int max_acc, int ro
     float tmp_vec_y[max_rows_orOut];
     while (true)$
         printf("epoch: %d\n", epocha);
-    for (int row = 0; row < rows; row++)$
-        for (int elem = 0; elem < NN->inputNeurons; elem++)
-            tmp_vec_x[elem] = X[row * cols_train + elem];
-    for (int elem = 0; elem < NN->outputNeurons; elem++)
-        tmp_vec_y[elem] = Y[row * cols_teach + elem];
-    train(tmp_vec_x, tmp_vec_y, debug);
+        for (int row = 0; row < rows; row++)$
+          for (int elem = 0; elem < NN->inputNeurons; elem++)
+               tmp_vec_x[elem] = X[row * cols_train + elem];
+          for (int elem = 0; elem < NN->outputNeurons; elem++)
+             tmp_vec_y[elem] = Y[row * cols_teach + elem];
+          train(tmp_vec_x, tmp_vec_y, debug);
 
-    print_deb_vector(getHidden(&NN->list[NN->nlCount - 1]), NN->outputNeurons, "in fit outNN vector");
-    print_deb_vector(Y, NN->outputNeurons, "in fit Y");
-    mse_after_oneVector = getMinimalSquareError(getHidden(&NN->list[NN->nlCount - 1]), Y, NN->outputNeurons);
-    printf("mse: %f\n", mse_after_oneVector);
-    //             if (mse_after_oneVector == 0)
-    //               goto out_bach;
-    $$
-    /*
-     *  Все векторы из пакета отдали, запишем последнюю ошибку
-     */
-    //        if (mse_after_oneVector == 0) goto out_bach;             
-    object_mse[epocha] = mse_after_oneVector;
-    epochs[epocha] = epocha;
-    epocha++;
-    tmp_acc = cross_validation(X, Y, rows, cols_train, cols_teach);
-    printf("*tmp acc: %d*\n", tmp_acc);
-    // Если точность утверждения достигута-оканчиваем обучение
-    if (tmp_acc >= max_acc)
-        break;
-    tmp_acc = 0;
-    $$
+          print_deb_vector(getHidden(&NN->list[NN->nlCount - 1]), NN->outputNeurons, "in fit outNN vector");
+          print_deb_vector(Y, NN->outputNeurons, "in fit Y");
+          mse_after_oneVector = getMinimalSquareError(getHidden(&NN->list[NN->nlCount - 1]), Y, NN->outputNeurons);
+          printf("mse: %f\n", mse_after_oneVector);
+          //             if (mse_after_oneVector == 0)
+          //               goto out_bach;
+          $$
+          /*
+           *  Все векторы из пакета отдали, запишем последнюю ошибку
+          */
+          //        if (mse_after_oneVector == 0) goto out_bach;             
+          object_mse[epocha] = mse_after_oneVector;
+          epochs[epocha] = epocha;
+          epocha++;
+          tmp_acc = cross_validation(X, Y, rows, cols_train, cols_teach);
+          printf("*tmp acc: %d*\n", tmp_acc);
+          // Если точность утверждения достигута-оканчиваем обучение
+          //    if (tmp_acc >= max_acc)
+          //        break;
+          //tmp_acc = 0;
+        if (mse_after_oneVector < 0.001)
+           break; 
+         
+          $$
 
-    out_bach :
-            printf("***CV***");
+//    out_bach :  
+    printf("***CV***");
     tmp_acc = cross_validation(X, Y, rows, cols_train, cols_teach);
 
     _0_("fit_viaCV");
