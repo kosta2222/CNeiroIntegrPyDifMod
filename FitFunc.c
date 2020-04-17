@@ -49,9 +49,9 @@ fit_viaCV(float *X, float *Y, float *X_test, float * Y_test, int max_acc, int ro
     // временные вектора для процесса обучения
     float tmp_vec_x[max_in_nn];
     float tmp_vec_y[max_rows_orOut];
-    while (true)$
+    while (true){
         printf("epoch: %d\n", epocha);
-        for (int row = 0; row < rows; row++)$
+        for (int row = 0; row < rows; row++){
              for (int elem = 0; elem < NN->inputNeurons; elem++)
                  tmp_vec_x[elem] = X[row * cols_train + elem];
              for (int elem = 0; elem < NN->outputNeurons; elem++)
@@ -65,7 +65,7 @@ fit_viaCV(float *X, float *Y, float *X_test, float * Y_test, int max_acc, int ro
              print_deb_vector(Y,NN->outputNeurons,"in fit Y");
              mse_after_oneVector = getMinimalSquareError(getHidden(&NN->list[NN->nlCount - 1]), Y, NN->outputNeurons);
              printf("mse: %f\n", mse_after_oneVector);
-             $$
+             }
         /*
          *  Все векторы из пакета отдали, запишем последнюю ошибку
         */
@@ -73,7 +73,7 @@ fit_viaCV(float *X, float *Y, float *X_test, float * Y_test, int max_acc, int ro
         object_mse[epocha] = mse_after_oneVector;
         epochs[epocha] = epocha;
         epocha++;
-        $$
+        }
     out_bach :;
     
     _0_("fit_viaCV");
