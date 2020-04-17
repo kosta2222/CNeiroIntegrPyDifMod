@@ -6,7 +6,7 @@ extern int debug;
 int check_2oneHotVecs(float *out_NN, float *vec_y_test, int vec_size);
 int calc_accur( int *scores, int rows);
 
-float cross_validation(float * X_test, float *Y_test, int rows, int cols_X_test, int cols_Y_test) {
+int cross_validation(float * X_test, float *Y_test, int rows, int cols_X_test, int cols_Y_test) {
     float tmp_vec_x_test[max_in_nn];
     float tmp_vec_y_test[max_rows_orOut];
     int scores[max_validSet_rows];
@@ -22,7 +22,7 @@ float cross_validation(float * X_test, float *Y_test, int rows, int cols_X_test,
         scores[index_row] =res; 
         index_row++;
     $$
-    printf("Accuracy:%f%s\n",calc_accur(scores,rows),"%");
+    printf("Accuracy:%d%s\n",calc_accur(scores,rows),"%");
 /*
     _0_("cross_validation");
 */
