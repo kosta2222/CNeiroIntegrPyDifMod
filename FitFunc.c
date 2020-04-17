@@ -79,13 +79,15 @@ fit_viaCV(float *X, float *Y, float *X_test, float * Y_test, int max_acc, int ro
     tmp_acc = cross_validation(X, Y, rows, cols_train, cols_teach);
     printf("*tmp acc: %d*\n", tmp_acc);
     // Если точность утверждения достигута-оканчиваем обучение
-    if (tmp_acc >= max_acc)
+//    if (tmp_acc >= max_acc)
+//        break;
+    if (mse_after_oneVector < 0.0001)
         break;
     tmp_acc = 0;
     $$
 
     out_bach :
-            printf("***CV***");
+    printf("***CV***");
     tmp_acc = cross_validation(X, Y, rows, cols_train, cols_teach);
 
     _0_("fit_viaCV");

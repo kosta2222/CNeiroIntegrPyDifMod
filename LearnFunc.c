@@ -15,7 +15,10 @@ void initiate_layers(int *network_map, int size) {
     NN->outputNeurons = network_map[NN->nlCount];
     setIO(&NN->list[0], network_map[0], network_map[1]);
     for (int i = 1; i < NN->nlCount; i++)
-        in = network_map[i], out = network_map[i + 1], setIO(&NN->list[i], in, out), printf("in: %d \t out:%d\n", in, out);
+        in = network_map[i],
+        out = network_map[i + 1],
+        setIO(&NN->list[i], in, out),
+        printf("in: %d \t out:%d\n", in, out);
 
 }
 
@@ -108,25 +111,32 @@ updMatrix(nnLay *curLay, float *enteredVal) {
 
 void
 setIO(nnLay *curLay, int inputs, int outputs) {
-    /* сенсоры - входа*/curLay->in = inputs + 1;
-    /* данный ряд нейронов */curLay->out = outputs;
-    for (int row = 0; row < curLay->out; row++)for (int elem = 0; elem < curLay->in; elem++)printf("operations\n"), curLay->matrix[row][elem] = operations(INIT_W_MY, curLay->in, curLay->out, 0, 0, "");
+    /* сенсоры - входа*/
+    curLay->in = inputs ; // + 1;
+    /* данный ряд нейронов */
+    curLay->out = outputs;
+    for (int row = 0; row < curLay->out; row++)
+       for (int elem = 0; elem < curLay->in; elem++)
+             printf("operations\n"),
+             curLay->matrix[row][elem] = operations(INIT_W_MY, curLay->in, curLay->out, 0, 0, "");
 
 }
 
 void
 makeHidden(nnLay *curLay, float *inputs, int debug) {
-    float tmpS = 0;
+    float tmpV = 0;
     float val = 0;
     for (int row = 0; row < curLay->out; row++)$
         for (int elem = 0; elem < curLay->in; elem++)
-           if (elem == 0) tmpS += curLay->matrix[row][0];
-           else tmpS += curLay->matrix[row][elem] * inputs[elem];
-        curLay->cost_signals[row] = tmpS;
-        val =operations(SIGMOID,tmpS,0.42,0,0,"");
+//           if (elem == 0) tmpV += curLay->matrix[row][0];
+//           else tmpV += curLay->matrix[row][elem] * inputs[elem];
+             tmpV += curLay->matrix[row][elem] * inputs[elem];
+        curLay->cost_signals[row] = tmpV;
+        val =operations(SIGMOID,tmpV,0.42,0,0,"");
         curLay->hidden[row] = val; 
         operations(debug, curLay->cost_signals[row], 0, 0, 0, "cost signals");
-        tmpS = 0;
+        tmpV = 0;
+        val = 0;
         $$
     operations(DEBUG_STR, 0, 0, 0, 0, "make hidden made");
 }
@@ -173,7 +183,8 @@ getMinimalSquareError(float *out_nn, float* teacher_answ, int size_vec) {
     print_deb_vector(out_nn,size_vec,"in getMse out_nn");
     print_deb_vector(teacher_answ,size_vec,"in getMse Y");
     float sum = 0;
-    for (int col = 0; col < size_vec; col++) sum += pow(out_nn[col] - teacher_answ[col],2);
+    for (int col = 0; col < size_vec; col++)
+        sum += pow(out_nn[col] - teacher_answ[col],2);
     return sum / size_vec;
 }
 
