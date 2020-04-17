@@ -4,21 +4,20 @@
 //-----------------[Операция наподобии виртуальной машины]------------
 extern PyObject * pInstanceRandom;
 float operations(int op, float a, float b, float c, int d, char* str) {
-    static bool ready = false;
     switch (op) {
         case RELU:
         {
-            if (a <= 0)
+            if (a < 0)
                 return 0;
             else
                 return a;
         }
         case RELU_DERIV:
         {
-            if (a <= 0)
+            if (a < 0)
                 return 0;
             else
-                return 1;
+                return a;
         }
         case TRESHOLD_FUNC:
         {
@@ -47,11 +46,11 @@ float operations(int op, float a, float b, float c, int d, char* str) {
         }
         case SIGMOID:
         {
-            return 2.0 / (1 + exp(b * (-a)));
+            return 1.0 / (1 + exp(b * (-a)));
         }
         case SIGMOID_DERIV:
         {
-            return b * 2.0 / (1 + exp(b * (-a)))*(1 - 2.0 / (1 + exp(b * (-a))));
+            return b * 1.0 / (1 + exp(b * (-a)))*(1 - 1.0 / (1 + exp(b * (-a))));
         }
         case DEBUG:
         {
@@ -67,19 +66,6 @@ float operations(int op, float a, float b, float c, int d, char* str) {
             else PyErr_Print();
             decr(pVal);
             return r * sqrt(2 / a);
-        }
-        case INIT_W_GLOROT:
-        {
-        return 2 / (a + b);
-        }
-        case INIT_W_MY:
-        {
-        if (ready){
-           ready = false;
-           return -0.01;
-           }
-           ready = true;
-           return 0.01;
         }
         case DEBUG_STR:
         {

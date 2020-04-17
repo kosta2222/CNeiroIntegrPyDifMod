@@ -14,28 +14,22 @@ void initiate_layers(int *network_map, int size) {
     NN->inputNeurons = network_map[0];
     NN->outputNeurons = network_map[NN->nlCount];
     setIO(&NN->list[0], network_map[0], network_map[1]);
-    for (int i = 1; i < NN->nlCount; i++)
-        in = network_map[i],
-        out = network_map[i + 1],
-        setIO(&NN->list[i], in, out),
-        printf("in: %d \t out:%d\n", in, out);
+    for (int i = 2; i <= NN->nlCount; i++)
+        in = network_map[i - 1], out = network_map[i], setIO(&NN->list[i - 1], in, out), printf("in: %d \t out:%d\n", in, out);
 
 }
 
 void
 backPropagate() {
-    /* Вычисление ошибки */
-    calcOutError(&NN->list[NN->nlCount - 1], NN->targets);
-    for (int i = NN->nlCount - 1; i > 0; i--)
-        if (i == NN->nlCount - 1)
-          calcHidError(&NN->list[i], NN->out_errors, getCostSignals(&NN->list[i - 1]));
-        else
-            calcHidError(&NN->list[i], getEssentialGradients(&NN->list[i + 1]), getCostSignals(&NN->list[i - 1]));
+
+    /* Вычисление ошибки */calcOutError(&NN->list[NN->nlCount - 1], NN->targets);
+
+    calcHidError(&NN->list[NN->nlCount - 1], getEssentialGradients(&NN->list[NN->nlCount - 1]), getCostSignals(&NN->list[NN->nlCount - 1 ]));
+
+    for (int i = NN->nlCount - 2; i > 0; i--) calcHidError(&NN->list[i], getEssentialGradients(&NN->list[i + 1]), getCostSignals(&NN->list[i - 1]));
     /* Последнему слою не нужны входа т.к. у них нет функции активации */
     calcHidZeroLay(&NN->list[0], getEssentialGradients(&NN->list[1]));
-    /* Обновление весов */
-    for (int i = NN->nlCount - 1; i > 0; i--)
-          updMatrix(&NN->list[i], getCostSignals(&NN->list[i - 1]));
+    /* Обновление весов */for (int i = NN->nlCount - 1; i > 0; i--)updMatrix(&NN->list[i], getCostSignals(&NN->list[i - 1]));
     updMatrix(&NN->list[0], NN->inputs);
 }
 
@@ -105,38 +99,30 @@ getOutCount(nnLay *curLay) {
 void
 updMatrix(nnLay *curLay, float *enteredVal) {
     for (int row = 0; row < curLay->out; row++)
-        for (int elem = 0; elem < curLay->in; elem++)
-            curLay->matrix[row][elem] -= NN->lr * curLay->errors[elem] * enteredVal[elem];
+        for (int elem = 0; elem < curLay->in; elem++, curLay->matrix[row][elem] -= NN->lr * curLay->errors[elem] * enteredVal[elem]);
 }
 
 void
 setIO(nnLay *curLay, int inputs, int outputs) {
-    /* сенсоры - входа*/
-    curLay->in = inputs ; // + 1;
-    /* данный ряд нейронов */
-    curLay->out = outputs;
-    for (int row = 0; row < curLay->out; row++)
-       for (int elem = 0; elem < curLay->in; elem++)
-             printf("operations\n"),
-             curLay->matrix[row][elem] = operations(INIT_W_MY, curLay->in, curLay->out, 0, 0, "");
+    /* сенсоры - входа*/curLay->in = inputs + 1;
+    /* данный ряд нейронов */curLay->out = outputs;
+    for (int row = 0; row < curLay->out; row++)for (int elem = 0; elem < curLay->in; elem++)printf("operations\n"), curLay->matrix[row][elem] = operations(INIT_W_HE, curLay->in, 0, 0, 0, "");
 
 }
 
 void
 makeHidden(nnLay *curLay, float *inputs, int debug) {
-    float tmpV = 0;
+    float tmpS = 0;
     float val = 0;
     for (int row = 0; row < curLay->out; row++)$
         for (int elem = 0; elem < curLay->in; elem++)
-//           if (elem == 0) tmpV += curLay->matrix[row][0];
-//           else tmpV += curLay->matrix[row][elem] * inputs[elem];
-             tmpV += curLay->matrix[row][elem] * inputs[elem];
-        curLay->cost_signals[row] = tmpV;
-        val =operations(SIGMOID,tmpV,0.42,0,0,"");
+           if (elem == 0) tmpS += curLay->matrix[row][0];
+           else tmpS += curLay->matrix[row][elem] * inputs[elem];
+        curLay->cost_signals[row] = tmpS;
+        val =operations(RELU,tmpS,0,0,0,"");
         curLay->hidden[row] = val; 
         operations(debug, curLay->cost_signals[row], 0, 0, 0, "cost signals");
-        tmpV = 0;
-        val = 0;
+        tmpS = 0;
         $$
     operations(DEBUG_STR, 0, 0, 0, 0, "make hidden made");
 }
@@ -156,14 +142,14 @@ getHidden(nnLay *curLay) {
 void
 calcOutError(nnLay *curLay, float *targets) {
     for (int row = 0; row < curLay->out; row++)
-        NN->out_errors[row] = (curLay->hidden[row] - targets[row]) * operations(SIGMOID_DERIV,curLay->cost_signals[row],0.42,0,0,"");
+        curLay->errors[row] = (curLay->hidden[row] - targets[row]) * operations(RELU_DERIV,curLay->cost_signals[row],0,0,0,"");
 }
 
 void
 calcHidError(nnLay *curLay, float *essential_gradients, float *enteredVals) {
     for (int elem = 0; elem < curLay->in; elem++) 
         for (int row = 0; row < curLay->out; row++)
-            curLay->errors[elem] += essential_gradients[row] * curLay->matrix[row][elem] * operations(SIGMOID_DERIV,enteredVals[elem],0.42,0,0,"");
+            curLay->errors[elem] += essential_gradients[row] * curLay->matrix[row][elem] * operations(RELU_DERIV,enteredVals[elem],0,0,0,"");
 }
 
 void
@@ -183,9 +169,12 @@ getMinimalSquareError(float *out_nn, float* teacher_answ, int size_vec) {
     print_deb_vector(out_nn,size_vec,"in getMse out_nn");
     print_deb_vector(teacher_answ,size_vec,"in getMse Y");
     float sum = 0;
-    for (int col = 0; col < size_vec; col++)
-        sum += pow(out_nn[col] - teacher_answ[col],2);
-    return sum / size_vec;
+    float square = 0;
+    float mean = 0;
+    for (int col = 0; col < size_vec; col++) sum += out_nn[col] - teacher_answ[col];
+    square = pow(sum, 2);
+    mean = square / size_vec;
+    return mean;
 }
 
 float

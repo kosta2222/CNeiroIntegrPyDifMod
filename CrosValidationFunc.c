@@ -4,9 +4,9 @@ extern whole_NN_params NN[1];
 extern int debug;
 
 int check_2oneHotVecs(float *out_NN, float *vec_y_test, int vec_size);
-int calc_accur( int *scores, int rows);
+float calc_accur( int *scores, int rows);
 
-int cross_validation(float * X_test, float *Y_test, int rows, int cols_X_test, int cols_Y_test) {
+float cross_validation(float * X_test, float *Y_test, int rows, int cols_X_test, int cols_Y_test) {
     float tmp_vec_x_test[max_in_nn];
     float tmp_vec_y_test[max_rows_orOut];
     int scores[max_validSet_rows];
@@ -22,7 +22,7 @@ int cross_validation(float * X_test, float *Y_test, int rows, int cols_X_test, i
         scores[index_row] =res; 
         index_row++;
     $$
-    printf("Accuracy:%d%s\n",calc_accur(scores,rows),"%");
+    printf("Accuracy:%f%s\n",calc_accur(scores,rows),"%");
 /*
     _0_("cross_validation");
 */
@@ -43,11 +43,11 @@ int check_2oneHotVecs(float *out_NN, float *vec_y_test, int vec_size) {
     return 1;
 }
 
-int calc_accur( int *scores, int rows) {
-    int accuracy = 0;
+float calc_accur( int *scores, int rows) {
+    float accuracy = 0;
     int sum = 0;
     // Посчитаем аккуратность
     for (int col = 0; col < rows; col++) sum += scores[col];
-    accuracy =  (sum / rows) * 100; // выразим в процентах
+    accuracy =  ((float)sum / rows) * 100; // выразим в процентах
     return accuracy;
 }

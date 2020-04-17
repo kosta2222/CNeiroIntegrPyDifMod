@@ -30,23 +30,22 @@ extern "C" {
 	// Представляет из себя слой
 
 	typedef struct {
-		int in;  // сенсоры данного слоя
-		int out;  // связи-выходы-данного-слоя-синапсы
-		float matrix[max_rows_orOut][max_in_nn];  // матрица весов данного слоя
-		float cost_signals[max_rows_orOut];  // после матричного умножения
-		float hidden[max_rows_orOut];  // что получилось при функции активации
-		float errors[max_rows_orOut];  // ошибки данного слоя,их можно сразу наложить на матрицу весов-подправить
+		int in; // сенсоры данного слоя
+		int out; // связи-выходы-данного-слоя-синапсы
+		float matrix[max_rows_orOut][max_in_nn]; // матрица весов данного слоя
+		float cost_signals[max_rows_orOut]; // после матричного умножения
+		float hidden[max_rows_orOut]; // что получилось при функции активации
+		float errors[max_rows_orOut]; // ошибки данного слоя,их можно сразу наложить на матрицу весов-подправить
 	} nnLay;
 
 	typedef struct {
 		nnLay list[max_am_layer];
-		int inputNeurons;  // количество выходных нейронов
-		int outputNeurons;  // количество входных нейронов
-		int nlCount;  // количество слоев
+		int inputNeurons; // количество выходных нейронов
+		int outputNeurons; // количество входных нейронов
+		int nlCount; // количество слоев
 		float inputs[max_in_nn];
 		float targets[max_rows_orOut];
-		float lr;  // коэффициент обучения
-		float out_errors[max_rows_orOut];
+		float lr; // коэффициент обучения
 	} whole_NN_params;
 
 	// Байт-код для обучения сети
@@ -62,7 +61,6 @@ extern "C" {
 		LEAKY_RELU_DERIV,
 		INIT_W_HE,
 		INIT_W_GLOROT,
-		INIT_W_MY,	
 		DEBUG,
 		DEBUG_STR
 	} OPS;
