@@ -62,6 +62,7 @@ extern "C" {
 		LEAKY_RELU_DERIV,
 		INIT_W_HE,
 		INIT_W_GLOROT,
+	        INIT_W_MY,		
 		DEBUG,
 		DEBUG_STR
 	} OPS;

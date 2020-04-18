@@ -4,6 +4,7 @@
 //-----------------[Операция наподобии виртуальной машины]------------
 extern PyObject * pInstanceRandom;
 float operations(int op, float a, float b, float c, int d, char* str) {
+    static bool ready = false;
     switch (op) {
         case RELU:
         {
@@ -66,6 +67,14 @@ float operations(int op, float a, float b, float c, int d, char* str) {
             else PyErr_Print();
             decr(pVal);
             return r * sqrt(2 / a);
+        }
+        case INIT_W_MY:{
+            if(ready){
+                ready = false;
+                return -0.01;
+                 }
+            ready = true;
+            return 0.01;
         }
         case DEBUG_STR:
         {
