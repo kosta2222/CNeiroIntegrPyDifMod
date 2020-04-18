@@ -29,10 +29,11 @@ backPropagate() {
     /* Вычисление ошибки */
     calcOutError(&NN->list[NN->nlCount - 1], NN->targets);
 
-    calcHidError(&NN->list[NN->nlCount - 1], getEssentialGradients(&NN->list[NN->nlCount - 1]), getCostSignals(&NN->list[NN->nlCount - 1 ]));
-
-    for (int i = NN->nlCount - 2; i > 0; i--)
-        calcHidError(&NN->list[i], getEssentialGradients(&NN->list[i + 1]), getCostSignals(&NN->list[i - 1]));
+    for (int i = NN->nlCount - 1; i > 0; i--)
+        if (i == NN->nlCount - 1)
+             calcHidError(&NN->list[i], NN->nn_error, getCostSignals(&NN->list[i - 1]));
+        else
+             calcHidError(&NN->list[i], getEssentialGradients(&NN->list[i + 1]), getCostSignals(&NN->list[i - 1]));            
     /* Последнему слою не нужны входа т.к. у них нет функции активации */
     calcHidZeroLay(&NN->list[0], getEssentialGradients(&NN->list[1]));
     /* Обновление весов */
