@@ -16,7 +16,8 @@ void initiate_layers(int *network_map, int size) {
     setIO(&NN->list[0], network_map[0], network_map[1]);
     for (int i = 2; i <= NN->nlCount; i++){
         in = network_map[i - 1]; 
-        out = network_map[i], setIO(&NN->list[i - 1], in, out);
+        out = network_map[i];
+        setIO(&NN->list[i - 1], in, out);
         printf("in: %d \t out:%d\n", in, out);
         }
 
@@ -107,7 +108,8 @@ getOutCount(nnLay *curLay) {
 void
 updMatrix(nnLay *curLay, float *enteredVal) {
     for (int row = 0; row < curLay->out; row++)
-        for (int elem = 0; elem < curLay->in; elem++, curLay->matrix[row][elem] -= NN->lr * curLay->errors[elem] * enteredVal[elem]);
+        for (int elem = 0; elem < curLay->in; elem++)
+            curLay->matrix[row][elem] -= NN->lr * curLay->errors[elem] * enteredVal[elem];
 }
 
 void
@@ -156,7 +158,7 @@ getHidden(nnLay *curLay) {
 void
 calcOutError(nnLay *curLay, float *targets) {
     for (int row = 0; row < curLay->out; row++)
-        curLay->errors[row] = (curLay->hidden[row] - targets[row]) * operations(RELU_DERIV,curLay->cost_signals[row],0,0,0,"");
+        NN->nn_error[row] = (curLay->hidden[row] - targets[row]) * operations(RELU_DERIV,curLay->cost_signals[row],0,0,0,"");
 }
 
 void
@@ -185,8 +187,8 @@ getMinimalSquareError(float *out_nn, float* teacher_answ, int size_vec) {
     float sum = 0;
     float square = 0;
     float mean = 0;
-    for (int col = 0; col < size_vec; col++) sum += out_nn[col] - teacher_answ[col];
-    square = pow(sum, 2);
+    for (int col = 0; col < size_vec; col++)
+        sum += pow(out_nn[col] - teacher_answ[col], 2);
     mean = square / size_vec;
     return mean;
 }

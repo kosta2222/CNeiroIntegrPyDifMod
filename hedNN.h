@@ -46,6 +46,7 @@ extern "C" {
 		float inputs[max_in_nn];
 		float targets[max_rows_orOut];
 		float lr; // коэффициент обучения
+		float nn_error[max_rows_orOut];
 	} whole_NN_params;
 
 	// Байт-код для обучения сети
