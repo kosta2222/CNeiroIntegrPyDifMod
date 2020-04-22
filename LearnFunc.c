@@ -116,7 +116,7 @@ updMatrix(nnLay *curLay, float *enteredVal) {
 void
 setIO(nnLay *curLay, int inputs, int outputs) {
     /* сенсоры - входа*/
-    curLay->in = inputs + 1;
+    curLay->in = inputs ;
     /* данный ряд нейронов */
     curLay->out = outputs;
     for (int row = 0; row < curLay->out; row++)
@@ -129,17 +129,18 @@ setIO(nnLay *curLay, int inputs, int outputs) {
 
 void
 makeHidden(nnLay *curLay, float *inputs, int debug) {
-    float tmpS = 0;
+    float tmp_v = 0;
     float val = 0;
     for (int row = 0; row < curLay->out; row++){
         for (int elem = 0; elem < curLay->in; elem++)
-           if (elem == 0) tmpS += curLay->matrix[row][0];
-           else tmpS += curLay->matrix[row][elem] * inputs[elem];
-        curLay->cost_signals[row] = tmpS;
-        val =operations(SIGMOID,tmpS,0.42,0,0,"");
+//           if (elem == 0) tmp_v += curLay->matrix[row][0];
+//           else 
+            tmp_v += curLay->matrix[row][elem] * inputs[elem];
+        curLay->cost_signals[row] = tmp_v;
+        val =operations(SIGMOID,tmp_v,0.42,0,0,"");
         curLay->hidden[row] = val; 
         operations(debug, curLay->cost_signals[row], 0, 0, 0, "cost signals");
-        tmpS = 0;
+        tmp_v = 0;
         }
     operations(DEBUG_STR, 0, 0, 0, 0, "make hidden made");
 }
@@ -194,29 +195,5 @@ getMinimalSquareError(float *out_nn, float* teacher_answ, int size_vec) {
     return mean;
 }
 
-float
-sigmoida(float val) {
-    float res = (1.0 / (1.0 + exp(val)));
-    return res;
-}
 
-float
-sigmoidasDerivate(float val) {
-    float res = exp(-val) / (pow((1 + exp(-val)), 2));
-    return res;
-}
-
-float relu(float x) {
-    if (x < 0)
-        return 0;
-    else
-        return x;
-}
-
-float derivateRelu(float x) {
-    if (x < 0)
-        return 0;
-    else
-        return 1;
-}
 //-----------------[/Основные функции обучения]--------------

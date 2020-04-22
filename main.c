@@ -32,21 +32,25 @@ int main(int argc, char * argv[]) {
     char * script = "";
     char * weight_file = "";
     py_init();
-    if (!strcmp("--help", argv[1]))$
+    if (!strcmp("--help", argv[1])){
+      
         printf("Usage:\nTo train:\t<exe> -train <lr> <epochs> <script to train> <weights file to save> -debug\n");
         printf("To predict:\t<exe> -predict -direct|-bacward <script to ask> <file with weights> -debug\n");
-        $$
+        }
+    
     // получить аргументы из коммандной строки
-    else if (!strcmp(argv[1], "-train") && argc == 7)$
+	else if (!strcmp(argv[1], "-train") && argc == 7){
         lr = (float) atof(argv[2]);
         eps = atoi(argv[3]);
         weight_file = argv[5];
+	
         if (!strcmp("-debug", argv[6])) debug = DEBUG;
         script = argv[4];
-        if (python_user_scriptDict(script)) $
+	
+        if (python_user_scriptDict(script)){
             puts("get user module error");
             return -1;
-            $$
+	    }
         //----------Загрузим матрицы из скрипта---------
         /*
          *  Узнаем количество рядов и колонок из скрипта
@@ -93,29 +97,32 @@ int main(int argc, char * argv[]) {
         cols_teach = tmp_cols;
         make_matrix_from_pyobj(pVal, Y_test, tmp_rows, cols_teach);
 //        cross_validation(X,Y,tmp_rows,cols_train,cols_teach);
-        fit_viaCV(X,Y,X_test,Y_test,80,tmp_rows,cols_train,cols_teach,lr,debug);
+        fit_viaCV(X,Y,X_test,Y_test, 75,tmp_rows,cols_train,cols_teach,lr,debug);
         printf("plot\n");
-        if (python_user_scriptDict("plot")) $
-            puts("get user module error");
-            return -1;
-            $$
-        plot_grafik_from_C(pDict,epochs,eps,object_mse);
+	
+//        if (python_user_scriptDict("plot")){
+//            puts("get user module error");
+//            return -1;
+//	    }
+//        plot_grafik_from_C(pDict,epochs,eps,object_mse);
         printf("serialize\n");    
         // сохраняем модель
-        if (python_user_scriptDict("serial")) $
+        if (python_user_scriptDict("serial")){
             puts("get user module error");
             return -1;
-            $$
+	    }
         compil_serializ(pDict, NN->list, NN->nlCount, weight_file);
         clear_userModule();
         python_clear();
-        $$
-    else if (!strcmp(argv[1], "-predict") && argc == 6)$
+        }
+    
+	else if (!strcmp(argv[1], "-predict") && argc == 6){
         script = argv[3];
-        if (python_user_scriptDict(script)) $
+        if (python_user_scriptDict(script)){
             puts("get user module error");
             return -1;
-            $$
+	    }
+	
         if (!strcmp("-debug", argv[5])) debug = DEBUG;
         weight_file = argv[4];
         vm_deserializ(NN->list, weight_file);
@@ -145,7 +152,7 @@ int main(int argc, char * argv[]) {
         predict_direct(X, debug);
         clear_userModule();
         python_clear();
-        $$
+        }
 
 
     _0_("main");

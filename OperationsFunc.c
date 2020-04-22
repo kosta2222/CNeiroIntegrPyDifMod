@@ -71,10 +71,10 @@ float operations(int op, float a, float b, float c, int d, char* str) {
         case INIT_W_MY:{
             if(ready){
                 ready = false;
-                return -0.01;
+                return -0.567141530112327;
                  }
             ready = true;
-            return 0.01;
+            return  0.567141530112327;
         }
         case DEBUG_STR:
         {
